@@ -10,4 +10,4 @@ go get github.com/gin-gonic/gin
 ```
 3. run `go mod tidy`
 
-To run the project, run `go run main.go`
+To run the project, run `go run main.go` and it will create `test.db` automatically

@@ -1,15 +1,13 @@
 package main
 
 import (
+	"net/http"
+
+	"github.com/BadLuckZ/Study-Go-Robust-API-Skooldio/todo"
 	"github.com/gin-gonic/gin"
 	"github.com/glebarez/sqlite"
 	"gorm.io/gorm"
 )
-
-type User struct {
-	gorm.Model
-	Name string
-}
 
 func main() {
 	// Connect to database
@@ -18,23 +16,26 @@ func main() {
 		panic(err)
 	}
 
-	// Create new table: User
-	db.AutoMigrate(&User{})
-
-	// Add new user
-	res := db.Create(&User{Name: "Jack"})
-	if res.Error != nil {
-		panic(res.Error)
-	}
+	// Create new table: Todo
+	db.AutoMigrate(&todo.Todo{})
 
 	r := gin.Default()
 
-	// GET /users : Get all users
-	r.GET("/users", func(c *gin.Context) {
-		var users []User
-		db.Find(&users)
-		c.JSON(200, users)
+	// Initialize Todo handler
+	handler := todo.NewTodoHandler(db)
+
+	// GET /ping
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusCreated, gin.H{
+			"message": "pong",
+		})
 	})
+
+	// GET /todos
+	r.GET("/todos", handler.GetTasks)
+
+	// POST /todos
+	r.POST("/todos", handler.NewTask)
 
 	r.Run()
 }
