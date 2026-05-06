@@ -81,6 +81,10 @@ func main() {
 	// Private
 	protected.POST("/todos", handler.NewTask)
 
+	// DELETE /todos/:id
+	// Private
+	protected.DELETE("/todos/:id", handler.RemoveTask)
+
 	// ===================
 	// Graceful Shutdown
 

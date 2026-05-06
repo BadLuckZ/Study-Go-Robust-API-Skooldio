@@ -1,9 +1,3 @@
-@base_url=http://localhost:8081
-
-POST {{base_url}}/todos
+DELETE http://localhost:8081/todos/1
 Content-Type: application/json
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NzgwODU4MDR9.xrjROtrOfxMT47sxWF9hAnjQEeZUuYgEeaOVu0KTcf4
-
-{
-    "text": "test 1"
-}
