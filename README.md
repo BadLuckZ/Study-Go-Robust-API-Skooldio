@@ -9,6 +9,7 @@ go get github.com/glebarez/sqlite
 go get github.com/gin-gonic/gin
 go get github.com/dgrijalva/jwt-go
 go get github.com/joho/godotenv
+go get golang.org/x/time/rate
 ```
 3. run `go mod tidy`
 

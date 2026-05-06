@@ -16,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/glebarez/sqlite"
 	"github.com/joho/godotenv"
+
 	"gorm.io/gorm"
 )
 
@@ -38,7 +39,10 @@ func main() {
 	r := gin.Default()
 
 	// Create Protected Routes
-	protected := r.Group("", auth.Protect([]byte(os.Getenv("SIGN"))))
+	protected := r.Group("",
+		auth.RateLimit(),
+		auth.Protect([]byte(os.Getenv("SIGN"))),
+	)
 
 	// Initialize Todo handler
 	handler := todo.NewTodoHandler(db)
