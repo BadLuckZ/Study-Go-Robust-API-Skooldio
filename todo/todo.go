@@ -2,7 +2,9 @@ package todo
 
 import (
 	"net/http"
+	"strings"
 
+	"github.com/BadLuckZ/Study-Go-Robust-API-Skooldio/auth"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -25,10 +27,24 @@ func NewTodoHandler(db *gorm.DB) *TodoHandler {
 
 // Create new todo item
 func (t *TodoHandler) NewTask(c *gin.Context) {
+	// =======================================================
+	// Check whether there is a token or not
+	s := c.Request.Header.Get("Authorization")
+	tokenString := strings.TrimPrefix(s, "Bearer ")
+	err := auth.Protect(tokenString)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+	// =======================================================
+
+	// Main Function
 	var todo Todo
 
 	// Change JSON values from request to Todo's Object
-	err := c.BindJSON(&todo)
+	err = c.BindJSON(&todo)
 	// From Todo Table -> require json must have "text" attribute
 
 	// If there's an error while changing...

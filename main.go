@@ -3,6 +3,7 @@ package main
 import (
 	"net/http"
 
+	"github.com/BadLuckZ/Study-Go-Robust-API-Skooldio/auth"
 	"github.com/BadLuckZ/Study-Go-Robust-API-Skooldio/todo"
 	"github.com/gin-gonic/gin"
 	"github.com/glebarez/sqlite"
@@ -30,6 +31,9 @@ func main() {
 			"message": "pong",
 		})
 	})
+
+	// GET /token
+	r.GET("/token", auth.AccessToken)
 
 	// GET /todos
 	r.GET("/todos", handler.GetTasks)

@@ -1,0 +1,5 @@
+jwt: header + payload + signature
+- ไม่ควรมีข้อมูลที่ไม่อยากให้คนอื่นรู้อยู่ใน payload 
+- ควรให้ expire เร็วๆ
+- ได้รับมาตอน login ใช้งานระบบ (authentication)
+- ใช้เป็น key เพื่อเช็คว่า user มีสิทธิ์เรียกใช้ api นี้หรือไม่ (authorization)
