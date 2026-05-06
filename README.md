@@ -8,6 +8,7 @@ go get gorm.io
 go get github.com/glebarez/sqlite
 go get github.com/gin-gonic/gin
 go get github.com/dgrijalva/jwt-go
+go get github.com/joho/godotenv
 ```
 3. run `go mod tidy`
 

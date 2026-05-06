@@ -2,6 +2,7 @@ package auth
 
 import (
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -15,7 +16,7 @@ func AccessToken(c *gin.Context) {
 	})
 
 	// Add Signature
-	ss, err := token.SignedString([]byte("==signature=="))
+	ss, err := token.SignedString([]byte(os.Getenv("SIGN")))
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

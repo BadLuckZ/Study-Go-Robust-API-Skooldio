@@ -1,16 +1,25 @@
 package main
 
 import (
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/BadLuckZ/Study-Go-Robust-API-Skooldio/auth"
 	"github.com/BadLuckZ/Study-Go-Robust-API-Skooldio/todo"
 	"github.com/gin-gonic/gin"
 	"github.com/glebarez/sqlite"
+	"github.com/joho/godotenv"
 	"gorm.io/gorm"
 )
 
 func main() {
+	// Load env
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Printf("Error in Environment Variables: %s\n", err)
+	}
+
 	// Connect to database
 	db, err := gorm.Open(sqlite.Open("./test.db"), &gorm.Config{})
 	if err != nil {
@@ -23,7 +32,7 @@ func main() {
 	r := gin.Default()
 
 	// Create Protected Routes
-	protected := r.Group("", auth.Protect([]byte("==signature==")))
+	protected := r.Group("", auth.Protect([]byte(os.Getenv("SIGN"))))
 
 	// Initialize Todo handler
 	handler := todo.NewTodoHandler(db)
