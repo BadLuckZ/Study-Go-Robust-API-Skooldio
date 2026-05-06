@@ -2,19 +2,32 @@ package auth
 
 import (
 	"fmt"
+	"net/http"
+	"strings"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
 )
 
-func Protect(token string) error {
-	_, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
-		_, ok := token.Method.(*jwt.SigningMethodHMAC)
-		if !ok {
-			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+func Protect(signature []byte) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		auth := c.Request.Header.Get("Authorization")
+		tokenString := strings.TrimPrefix(auth, "Bearer ")
+
+		_, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+			_, ok := token.Method.(*jwt.SigningMethodHMAC)
+			if !ok {
+				return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
+			}
+			return signature, nil
+		})
+
+		if err != nil {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			// c.JSON() จะยังไปต่อใน handler ถัดไป
+			return
 		}
 
-		return []byte("==signature=="), nil
-	})
-
-	return err
+		c.Next()
+	}
 }

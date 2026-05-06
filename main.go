@@ -22,10 +22,14 @@ func main() {
 
 	r := gin.Default()
 
+	// Create Protected Routes
+	protected := r.Group("", auth.Protect([]byte("==signature==")))
+
 	// Initialize Todo handler
 	handler := todo.NewTodoHandler(db)
 
 	// GET /ping
+	// Public
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusCreated, gin.H{
 			"message": "pong",
@@ -33,13 +37,16 @@ func main() {
 	})
 
 	// GET /token
+	// Public
 	r.GET("/token", auth.AccessToken)
 
 	// GET /todos
+	// Public
 	r.GET("/todos", handler.GetTasks)
 
 	// POST /todos
-	r.POST("/todos", handler.NewTask)
+	// Private
+	protected.POST("/todos", handler.NewTask)
 
 	r.Run()
 }
